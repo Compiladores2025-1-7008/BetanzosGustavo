@@ -1,0 +1,6 @@
+abstract 0x1A3F
+boolean 42
+assert testIdentifier
+break
+byte anotherIdentifier
+helloWorld 0xFF

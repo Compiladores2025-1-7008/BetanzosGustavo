@@ -1,0 +1,50 @@
+<project name="C_1Lexer" default="run" basedir=".">
+    <!-- Define paths and directories -->
+    <property name="src.dir" location="src"/>
+    <property name="build.dir" location="build"/>
+    <property name="classes.dir" location="${build.dir}/classes"/>
+    <property name="test.file" location="${src.dir}/tst/prueba.txt"/>
+    <property name="jflex.dir" location="${src.dir}/main/jflex"/>
+    <property name="java.dir" location="${src.dir}/main/java"/>
+
+    <!-- Prepare build directories -->
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+    </target>
+
+    <!-- Generate the lexer from Lexer.flex using JFlex -->
+    <target name="generate-lexer">
+        <java classname="jflex.Main" fork="true">
+            <arg value="${jflex.dir}/Lexer.flex"/>
+            <arg value="-d"/>
+            <arg value="${jflex.dir}"/>
+            <classpath>
+                <!-- Add the path to the JFlex jar here -->
+                <pathelement location="lib/jflex-full-1.9.1.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+    <!-- Compile the Java classes -->
+    <target name="compile" depends="init, generate-lexer">
+        <javac srcdir="${java.dir}" destdir="${classes.dir}">
+            <include name="**/*.java"/>
+        </javac>
+    </target>
+
+    <!-- Run the lexer with the test file -->
+    <target name="run" depends="compile">
+        <java classname="main.jflex.Lexer" fork="true">
+            <arg value="${test.file}"/>
+            <classpath>
+                <pathelement path="${classes.dir}"/>
+            </classpath>
+        </java>
+    </target>
+
+    <!-- Clean build directory -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+</project>
